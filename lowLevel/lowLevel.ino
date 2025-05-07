@@ -4,6 +4,8 @@
 #include "pwm_utils.h"
 #include "timer_utils.h"
 #include "sensor_utils.h"
+#include "BluetoothSerial.h"
+
 
 int motorPins[4] = {26, 27, 25, 33};
 const int triggerPins[5] = {22,19,18,17,4}; //LF LB RF RB BB
@@ -12,8 +14,8 @@ long distances[5];
 int counterLeft;
 int counterRight;
 int initializePark;
-
-
+char cmd;
+BluetoothSerial serialBt;
 void setup() {
     Serial.begin(115200);
     initHardwareTimer();
@@ -25,10 +27,10 @@ void setup() {
 
     counterLeft = 0;
     counterRight = 0;
-    initializePark = 0;
-
+    initializePark = -1;
+    serialBt.begin("Esp32-BT");
     motorsInit(motorPins);
-    carForward(100);
+    
 }
 
 void loop() {
@@ -39,6 +41,21 @@ void loop() {
         Serial.print(" value: ");
         Serial.println(distances[i]);
     }
+
+    if(serialBt.available()){
+      cmd = serialBt.read();
+    }
+
+    if(cmd=='1'){
+      initializePark = 0;
+      carForward(100);
+      cmd = 'N';
+    }else if (cmd=='0')
+    {
+      initializePark = -1;
+      cmd = 'N';
+    }
+
 
     if(initializePark == 0) {
         if(distances[0] > 23) {
