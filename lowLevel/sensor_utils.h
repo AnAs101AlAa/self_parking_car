@@ -1,9 +1,3 @@
-#include <Arduino.h>
-
-// === GPIO Configuration ===
-const uint8_t triggerPins[5] = {18,27,22,17,33};
-const uint8_t echoPins[5]    = {19,26,21,16,32};
-
 #define GPIO_ENABLE_REG      (*((volatile uint32_t *)0x3FF44020))
 #define GPIO_ENABLE1_REG     (*((volatile uint32_t *)0x3FF4402C))
 
@@ -15,9 +9,6 @@ const uint8_t echoPins[5]    = {19,26,21,16,32};
 
 #define GPIO_IN_REG          (*((volatile uint32_t *)0x3FF4403C))
 #define GPIO_IN1_REG         (*((volatile uint32_t *)0x3FF44040))
-
-#define IO_MUX_GPIO2_REG   (*((volatile uint32_t *)0x3FF49040))
-
 
 void setOutput(uint8_t gpio) {
   if (gpio < 32)
@@ -54,46 +45,18 @@ long measureDistance(uint8_t trigPin, uint8_t echoPin) {
   triggerPulse(trigPin);
 
   // Wait for echo pin to go HIGH (start)
-  unsigned long start = micros();
+  unsigned long start = readHardwareTimer();
   while (!readInput(echoPin)) {
-    if (micros() - start > 30000) return -1; // Timeout
+    if (readHardwareTimer() - start > 30000) return -1; // Timeout
   }
 
-  unsigned long echo_start = micros();
+  unsigned long echo_start = readHardwareTimer();
 
   // Wait for echo pin to go LOW (end)
   while (readInput(echoPin)) {
-    if (micros() - echo_start > 30000) return -1; // Timeout
+    if (readHardwareTimer() - echo_start > 30000) return -1; // Timeout
   }
 
-  unsigned long duration = micros() - echo_start;
+  unsigned long duration = readHardwareTimer() - echo_start;
   return duration * 0.0343 / 2; // Distance in cm
-}
-
-void setup() {
-  Serial.begin(115200);
-
-  // Set all trigger pins as output
-  for (int i = 0; i < 5; i++) {
-    setOutput(triggerPins[i]);
-  }
-
-  Serial.println("Starting 5 Ultrasonic Sensors (Low-Level)");
-}
-
-void loop() {
-  for (int i = 0; i < 5; i++) {
-    long dist = measureDistance(triggerPins[i], echoPins[i]);
-    Serial.print("Sensor ");
-    Serial.print(i + 1);
-    Serial.print(": ");
-    if (dist >= 0)
-      Serial.print(dist);
-    else
-      Serial.print("Timeout");
-    Serial.println(" cm");
-  }
-
-  Serial.println("----------------------");
-
 }
