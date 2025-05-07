@@ -4,7 +4,6 @@
 #define GPIO_FUNC0_OUT_SEL_CFG_REG 0x3FF44530
 #define LEDC_CONF_REG (*(volatile uint32_t*)0x3FF59190)
 #define DPORT_PERIP_CLK_EN_REG (*(volatile uint32_t*)0x3FF000C0)
-#define DPORT_PERIP_RST_EN_REG (*(volatile uint32_t*)0x3FF000C4)
 #define resolution (uint)8
 
 volatile uint32_t* LEDC_HSCH_CONF0_REG[] = {
