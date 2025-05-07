@@ -6,6 +6,8 @@
 #include "sensor_utils.h"
 #include "BluetoothSerial.h"
 
+#include "BluetoothSerial.h"
+
 
 int motorPins[4] = {26, 27, 25, 33};
 const int triggerPins[5] = {22,19,18,17,4}; //LF LB RF RB BB
@@ -60,6 +62,21 @@ void loop() {
         Serial.print(" value: ");
         Serial.println(distances[i]);
     }
+
+    if(serialBt.available()){
+      cmd = serialBt.read();
+    }
+
+    if(cmd=='1'){
+      initializePark = 0;
+      carForward(100);
+      cmd = 'N';
+    }else if (cmd=='0')
+    {
+      initializePark = -1;
+      cmd = 'N';
+    }
+
 
     if(initializePark == 0) {
         if(distances[0] > 23 && distances[1] > 23) {
