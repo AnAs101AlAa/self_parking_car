@@ -119,13 +119,13 @@ void motorOff(int index) {
 }
 
 void carForward(int duty) {
-    motorOn(0, 1, duty);
-    motorOn(2, 0, duty);
+    motorOn(0, 0, duty + 6);
+    motorOn(2, 1, duty);
 }
 
 void carBackward(int duty) {
-    motorOn(0, 0, duty);
-    motorOn(2, 1, duty);
+    motorOn(0, 1, duty + 6);
+    motorOn(2, 0, duty);
 }
 
 void carStop(){
@@ -133,9 +133,16 @@ void carStop(){
     motorOff(2);
 }
 
+void carSpinRight(int time) {
+    motorOn(0, 1, 20);
+    motorOn(2,0, 60);
+    delay(time);
+    carStop();
+}
+
 void carSpinLeft(int time) {
-    motorOn(2, 1, 250);
-    motorOn(0,0, 50);
+    motorOn(0, 1, 60);
+    motorOn(2, 0, 20);
     delay(time);
     carStop();
 }
