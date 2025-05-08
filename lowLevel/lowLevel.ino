@@ -6,12 +6,11 @@
 #include "sensor_utils.h"
 #include "BluetoothSerial.h"
 
-#include "BluetoothSerial.h"
-
 
 int motorPins[4] = {26, 27, 25, 33};
 const int triggerPins[5] = {22,19,18,17,4}; //LF LB RF RB BB
 const int echoPins[5] = {23,21,5,16,2}; //LF LB RF RB BB
+const int buzzerPin = 13;
 long distances[5];
 int counterLeft;
 int counterRight;
@@ -28,6 +27,7 @@ void setup() {
         setOutput(triggerPins[i]);
         distances[i] = 0;
     }
+    setOutput(buzzerPin);
 
     serialBt.begin("ESP32-BT");
 
@@ -35,8 +35,9 @@ void setup() {
     counterRight = 0;
     initializePark = -1;
 
-    motorsInit(motorPins);
     //carForward(70);
+    serialBt.begin("Esp32-BT");
+    motorsInit(motorPins);
 }
 
 void loop() {
@@ -48,12 +49,10 @@ void loop() {
         initializePark= 0;
         carForward(70);
     }else if (cmd == '0'){
+        digitalWrite(buzzerPin, LOW);
         initializePark = -1;
         carStop();
     }
-
-
-
 
     for(int i=0;i< 5; i++) {
         distances[i] = measureDistance(triggerPins[i], echoPins[i]);
@@ -62,21 +61,6 @@ void loop() {
         Serial.print(" value: ");
         Serial.println(distances[i]);
     }
-
-    if(serialBt.available()){
-      cmd = serialBt.read();
-    }
-
-    if(cmd=='1'){
-      initializePark = 0;
-      carForward(100);
-      cmd = 'N';
-    }else if (cmd=='0')
-    {
-      initializePark = -1;
-      cmd = 'N';
-    }
-
 
     if(initializePark == 0) {
         if(distances[0] > 23 && distances[1] > 23) {
@@ -116,6 +100,7 @@ void loop() {
                 break;
         }
         carStop();
+        digitalWrite(buzzerPin, HIGH);
         initializePark = 3;
     }
     
@@ -130,6 +115,7 @@ void loop() {
                 break;
         }
         carStop();
+        digitalWrite(buzzerPin, HIGH);
         initializePark = 3;
     }
 }
