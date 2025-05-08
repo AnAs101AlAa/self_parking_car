@@ -17,30 +17,11 @@
 #define TIMG0_T0LO_REG         (*((volatile uint32_t *)(TIMG0_BASE + 0x0004))) // Read Only
 #define TIMG0_T0HI_REG         (*((volatile uint32_t *)(TIMG0_BASE + 0x0008))) // Read Only
 #define TIMG0_T0UPDATE_REG     (*((volatile uint32_t *)(TIMG0_BASE + 0x000C))) // Write Only
-#define TIMG0_T0ALARMLO_REG    (*((volatile uint32_t *)(TIMG0_BASE + 0x0010)))
-#define TIMG0_T0ALARMHI_REG    (*((volatile uint32_t *)(TIMG0_BASE + 0x0014)))
 #define TIMG0_T0LOADLO_REG     (*((volatile uint32_t *)(TIMG0_BASE + 0x0018)))
 #define TIMG0_T0LOADHI_REG     (*((volatile uint32_t *)(TIMG0_BASE + 0x001C)))
 #define TIMG0_T0LOAD_REG       (*((volatile uint32_t *)(TIMG0_BASE + 0x0020))) // Write Only
 
 // TIMG0_T0CONFIG_REG Bits
-#define TIMG_T0_EN_BIT             (1 << 31) // Timer Enable
-#define TIMG_T0_INCREASE_BIT       (1 << 30) // 1: Increment, 0: Decrement
-#define TIMG_T0_AUTORELOAD_BIT     (1 << 29) // Auto-reload on alarm
-#define TIMG_T0_DIVIDER_POS        13        // Prescaler divider (16 bits)
-#define TIMG_T0_DIVIDER_MASK       (0xFFFF << TIMG_T0_DIVIDER_POS)
-#define TIMG_T0_ALARM_EN_BIT       (1 << 10) // Enable alarm
-// Note: TRM v5.3 seems to have different bit positions than older versions or examples.
-// Let's re-verify based on the extracted text or assume common practice.
-// Common practice/older TRMs often show EN at bit 31, INCREASE at 30, AUTORELOAD at 29, DIVIDER at 13-28, ALARM_EN at 10.
-// Let's use these common positions for now, adjust if needed after testing.
-#undef TIMG_T0_EN_BIT
-#undef TIMG_T0_INCREASE_BIT
-#undef TIMG_T0_AUTORELOAD_BIT
-#undef TIMG_T0_DIVIDER_POS
-#undef TIMG_T0_DIVIDER_MASK
-#undef TIMG_T0_ALARM_EN_BIT
-
 #define TIMG_T0_EN_BIT             (1 << 31) // Timer Enable
 #define TIMG_T0_INCREASE_BIT       (1 << 30) // 1: Increment, 0: Decrement
 #define TIMG_T0_AUTORELOAD_BIT     (1 << 29) // Auto-reload on alarm

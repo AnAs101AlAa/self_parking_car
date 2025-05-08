@@ -9,6 +9,7 @@
 int motorPins[4] = {26, 27, 25, 33};
 const int triggerPins[5] = {22, 19, 18, 17, 4}; // LF LB RF RB BB
 const int echoPins[5] = {23, 21, 5, 16, 2};     // LF LB RF RB BB
+const int buzzerPin = 13;
 long distances[5];
 int counterLeft;
 int counterRight;
@@ -27,6 +28,7 @@ void setup()
         setOutput(triggerPins[i]);
         distances[i] = 0;
     }
+    setOutput(buzzerPin);
 
     serialBt.begin("ESP32-BT");
 
@@ -34,8 +36,9 @@ void setup()
     counterRight = 0;
     initializePark = -1;
 
-    motorsInit(motorPins);
     // carForward(70);
+    serialBt.begin("Esp32-BT");
+    motorsInit(motorPins);
 }
 
 void loop()
@@ -52,6 +55,7 @@ void loop()
     }
     else if (cmd == '0')
     {
+        digitalWrite(buzzerPin, LOW);
         initializePark = -1;
         carStop();
     }
@@ -118,6 +122,7 @@ void loop()
                 break;
         }
         carStop();
+        digitalWrite(buzzerPin, HIGH);
         initializePark = 3;
     }
 
@@ -134,6 +139,7 @@ void loop()
                 break;
         }
         carStop();
+        digitalWrite(buzzerPin, HIGH);
         initializePark = 3;
     }
 }
